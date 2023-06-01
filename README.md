@@ -22,17 +22,17 @@ The cluster contain two namespaces - `devops` where the pipeline is executed and
 
 ### CI/CD Pipeline
 The CI/CD pipeline is managed by Jenkins and executed using agent pods inside the K8s cluster.  
-Jenkins' configuration should be persistent, therefore it is deployed with a persistent volume.
+Jenkins' configuration should be persistent, therefore it is deployed with a persistent volume.  
 
 ### .NET Core sample application
 I've used dotnet to build a simple landing page template as my sample app.  
 For the building and containerizing stage, Jenkins uses a multistage Dockerfile using Microsoft's .NET SDK image as the builder and Microsoft's ASP.NET image for the delivered image.  
 
 ## Detailed set-up process
-Using minikube, I've initiated a cluster with the 2 namespaces mentioned above.
+Using minikube, I've initiated a cluster with the 2 namespaces mentioned above.  
 
 ### Kuberentes resources
-   • Jenkins deployment aswell as a service for it's GUI and for it's agents  
+   • Jenkins deployment aswell as a service for it's GUI and for it's agents.  
    • Persistent volume for jenkins' data, aswell as a pv claim for it's deployment.  
    •
 
@@ -43,6 +43,10 @@ Using minikube, I've initiated a cluster with the 2 namespaces mentioned above.
    • Docker  
    • Jenkins agent  
 
+
+## Further improvements
+NodePort is sufficient for the scope of this project as it is running on just one node.
+Adding an NGINX controller and ingresses for both namespaces allow better scalability and reliability.
 
 ## Installation
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
