@@ -32,16 +32,16 @@ For the building and containerizing stage, Jenkins uses a multistage Dockerfile 
 Using minikube, I've initiated a cluster with the 2 namespaces mentioned above.
 
 ### Kuberentes resources
-  •Jenkins deployment aswell as a service for it's GUI and for it's agents  
-  •Persistent volume for jenkins' data, aswell as a pv claim for it's deployment.  
-  •
+   • Jenkins deployment aswell as a service for it's GUI and for it's agents  
+   • Persistent volume for jenkins' data, aswell as a pv claim for it's deployment.  
+   •
 
 ## Extra information
 ### Jenkins plugins used in the project
-  • Pipeline  
-  • Git  
-  • Docker  
-  • Jenkins agent  
+   • Pipeline  
+   • Git  
+   • Docker  
+   • Jenkins agent  
 
 
 ## Installation
