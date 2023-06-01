@@ -31,8 +31,7 @@ spec:
           allowPrivilegeEscalation: true
           privileged: true
           readOnlyRootFilesystem: false
-          # Needs to be changed to 1000 - jenkins user
-          runAsUser: 0
+          runAsUser: 1000
         volumeMounts:
           - name: jenkins-data
             mountPath: /var/jenkins_home
@@ -80,27 +79,10 @@ metadata:
   name: jenkins-pvc
   namespace: devops
 spec:
-  volumeName: jenkins-pv
-  storageClassName: local
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
----
-
-# A persistent volume resource to save Jenkins' configuration and pipeline projects
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: jenkins-pv
-spec:
-  capacity:
-    storage: 2Gi
-  volumeMode: Filesystem
   storageClassName: local
-  persistentVolumeReclaimPolicy: Retain
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /jenkins-data/
+  volumeMode: Filesystem
