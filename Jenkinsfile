@@ -8,10 +8,18 @@ pipeline {
     //     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
     // }
     stages {
-        stage('Git') {
+        stage('Clean') {
             steps {
                 script {
-                    CURR_STAGE="Git"
+                    CURR_STAGE="Clean"
+                }
+                cleanWs()
+            }
+        }
+        stage('Git checkout') {
+            steps {
+                script {
+                    CURR_STAGE="Git checkout"
                 }
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-repo', url: 'https://github.com/amihaiba/elta-project.git']])
             }
