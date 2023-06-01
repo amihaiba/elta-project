@@ -1,0 +1,6 @@
+# Blacklisted items
+secret.txt
+venv/
+bin/
+obj/
+whitelist.gitignore
