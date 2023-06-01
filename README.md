@@ -29,35 +29,32 @@ I've used dotnet to build a simple landing page template as my sample app.
 For the building and containerizing stage, Jenkins uses a multistage Dockerfile using Microsoft's .NET SDK image as the builder and Microsoft's ASP.NET image for the delivered image.  
 
 ## Detailed set-up process
-Using minikube, I've initiated a cluster with the 2 namespaces mentioned above.  
-
 ### Kuberentes resources
-   • Jenkins deployment aswell as a service for it's GUI and for it's agents.  
-   • Persistent volume for jenkins' data, aswell as a pv claim for it's deployment.  
-   •
+#### `devops` namespace:
+   • Jenkins deployment
+   • Jenkins service for the GUI
+   • Jenkins service for communicating with agents
+   • Jenkins PVC
+   • Jenkins PV
+#### `prod` namespace:
 
-## Extra information
-### Jenkins plugins used in the project
+### Jenkins set up
+Jenkins master have no executors and run the pipeline on agent pods.
+#### Jenkins plugins:
    • Pipeline  
    • Git  
    • Docker  
-   • Jenkins agent  
+   • Kubernetes
 
 
 ## Further improvements
 NodePort is sufficient for the scope of this project as it is running on just one node.
 Adding an NGINX controller and ingresses for both namespaces allow better scalability and reliability.
 
-## Installation
+<!-- ## Installation
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
 ```bash
 ls if [[ -z $1 ]]; then
 pip install foobar
-```
-
-## Usage
-
-```python
-import foobar
-```
+``` -->
