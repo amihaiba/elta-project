@@ -18,4 +18,5 @@ RUN groupadd -r elta && useradd -r -g elta elta-user
 WORKDIR /usr/local/sample-app
 # Copy built app into the runtime image
 COPY --chown=elta-user:elta --from=build-env /usr/local/sample-app/out .
-ENTRYPOINT dotnet eltaMVC.dll
+# USER elta-user
+ENTRYPOINT dotnet eltaMVC.dll --urls="http://0.0.0.0:5000"
