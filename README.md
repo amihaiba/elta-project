@@ -21,24 +21,34 @@ The project and documentation are hosted on this Github repo for you to view and
 ### Kubernetes Cluster
 For the purpose of this assignment, I've used minikube to set up a Kubernetes cluster.
 
-Both Jenkins and production pods must be able to communicate with outside of the cluster, therefore I've set up a service and ingress for both with an NGINX controller.
+<!-- Both Jenkins and production pods must be able to communicate with outside of the cluster, therefore I've set up a service and ingress for both with an NGINX controller. -->
 
-The cluster has two namespaces - `devops` where the pipeline is executed and `prod` where the production pods run.
+The cluster contain two namespaces - `devops` where the pipeline is executed and `prod` where the production pods run.
 
 ### CI/CD Pipeline
-The CI/CD pipeline is managed by Jenkins and executed using an agent, both working inside the K8s cluster.
+The CI/CD pipeline is managed by Jenkins and executed using agent pods inside the K8s cluster.
 
-Jenkins' configuration should be persistent and therefore use a persistent volume within the cluster.
+Jenkins' configuration should be persistent, therefore a persistent volume is attached to it's deployment.
 
 ### .NET Core sample application
 I've used dotnet to build a simple landing page template as my sample app.
 
 For the building and containerizing stage, Jenkins uses a multistage Dockerfile using Microsoft's .NET SDK image as the builder and Microsoft's ASP.NET image for the delivered image.
 
-## Set-up process
+## Detailed set-up process
 Using minikube, I've initiated a cluster with the 2 namespaces mentioned above.
 
-To start 
+### Kuberentes resources
+  •Jenkins deployment aswell as a service for 
+  •Persistent volume for jenkins' data, aswell as a pv claim for it's deployment.
+  •
+
+## Extra information
+### Jenkins plugins used in the project
+  • Pipeline 
+  • Git
+  • Docker
+  • Jenkins agent
 
 ## Installation
 
