@@ -1,8 +1,9 @@
 def CURR_STAGE="Start"
 pipeline {
-    agent {
-        label 'build-test'
-    }
+    agent any
+    // agent {
+    //     label 'build-test'
+    // }
     environment {
         // DOCKERHUB_CREDENTIALS = credentials('dockerhub')
     }
