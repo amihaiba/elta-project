@@ -10,8 +10,10 @@ pipeline {
     stages {
         stage('Git') {
             steps {
-                CURR_STAGE="Git"
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-repo', url: 'https://github.com/amihaiba/elta-project.git']])
+                script {
+                    CURR_STAGE="Git"
+                }
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-repo', url: 'https://github.com/amihaiba/elta-project.git']])
             }
         }
         stage('Build') {
