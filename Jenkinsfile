@@ -4,9 +4,9 @@ pipeline {
     // agent {
     //     label 'build-test'
     // }
-    environment {
-        // DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-    }
+    // environment {
+    //     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    // }
     stages {
         stage('Git') {
             steps {
@@ -18,17 +18,23 @@ pipeline {
         }
         stage('Build') {
             steps {
-                CURR_STAGE="Build"
+                script {
+                    CURR_STAGE="Build"
+                }
             }
         }
         stage('Delivery') {
             steps {
-                CURR_STAGE="Delivery"
+                script {
+                    CURR_STAGE="Delivery"
+                }
             }
         }
         stage('Deployment') {
             steps {
-                CURR_STAGE="Deployment"
+                script {
+                    CURR_STAGE="Deployment"
+                }
             }
         }
     }
