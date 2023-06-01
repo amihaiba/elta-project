@@ -1,12 +1,13 @@
-def CURR_STAGE="Start"
+CURR_STAGE="Start"
 pipeline {
     agent any
     // agent {
     //     label 'build-test'
     // }
-    // environment {
-    //     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-    // }
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker-cred')
+        DOCKER_IMAGE_NAME = "amihaiba/eltamvc"
+    }
     stages {
         stage('Clean') {
             steps {
@@ -26,8 +27,14 @@ pipeline {
         }
         stage('Build') {
             steps {
+                // withCredentials([
+                //     usernamePassword(credentials: 'docker-cred', usernameVariable: USER, passwordVariable: PASSWD)
+                // ]) {}
                 script {
                     CURR_STAGE="Build"
+                    GIT_COMMIT_REV = sh (script: 'git log -n 1 --pretty=format:"h"', returnStdout: true)
+                    appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
+                    appImage.push()
                 }
             }
         }
@@ -48,10 +55,10 @@ pipeline {
     }
     post {
         success {
-            echo "Build ${env.BUILD_NUMBER} completed successfuly"
+            echo "Build ${BUILD_NUMBER} completed successfuly"
         }
         failure {
-            echo "Build ${env.BUILD_NUMBER} failed at ${CURR_STAGE}"
+            echo "Build ${BUILD_NUMBER} failed at ${CURR_STAGE}"
         }
         always {
             sh 'docker logout'
