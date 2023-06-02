@@ -64,13 +64,13 @@ pipeline {
     }
     post {
         success {
-            echo "Build ${BUILD_NUMBER} completed successfuly"
+            echo "Build number ${BUILD_DISPLAY_NAME} completed successfuly"
         }
         failure {
-            echo "Build ${BUILD_NUMBER} failed at ${CURR_STAGE} stage"
+            echo "Build number ${BUILD_DISPLAY_NAME} failed at ${CURR_STAGE} stage"
         }
-        always {
-            sh 'docker logout'
-        }
+        // always {
+        //     sh 'docker logout'
+        // }
     }
 }
