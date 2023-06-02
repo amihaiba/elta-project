@@ -47,9 +47,9 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Delivery"
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-cred') {
-                        appImage.push("0.1.${BUILD_NUMBER}-${GIT_COMMIT_REV}")
-                        appImage.push("latest")
+                    // docker.withRegistry('https://registry.hub.docker.com', 'docker-cred') {
+                    //     appImage.push("0.1.${BUILD_NUMBER}-${GIT_COMMIT_REV}")
+                    //     appImage.push("latest")
                     }
                 }
             }
