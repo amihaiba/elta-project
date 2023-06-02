@@ -9,5 +9,5 @@ spec:
   - name: builder
     image: jenkins/jnlp-agent-docker:latest
     command:
-    - docker
+    - cat
     tty: true
