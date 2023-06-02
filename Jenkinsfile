@@ -39,8 +39,8 @@ pipeline {
                     // appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
                 }
                 container('builder') {
-                    sh 'systemctl start docker'
-                    sh 'docker build -t amihaiba/eltamvc:0.1.0 ./eltaMVC/'
+                    sh 'docker version'
+                    // sh 'docker build -t amihaiba/eltamvc:0.1.0 ./eltaMVC/'
                 }
             }
         }
