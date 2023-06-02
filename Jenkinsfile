@@ -3,8 +3,8 @@ pipeline {
     agent {
         kubernetes {
             yamlFile 'build-agent.yaml'
-            defaultContainer 'alpine'
-            idleMinutes 1
+            defaultContainer 'builder'
+            idleMinutes 2
         }
     }
     environment {
@@ -38,8 +38,8 @@ pipeline {
                     // GIT_COMMIT_REV = sh (script: 'git log -n 1 --pretty=format:%h', returnStdout: true)
                     // appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
                 }
-                container('alpine') {
-                    sh 'uptime'
+                container('builder') {
+                    sh 'docker build -t amihaiba/eltamvc:0.1.0 ./eltaMVC/'
                 }
             }
         }
