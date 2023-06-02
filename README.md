@@ -16,11 +16,11 @@ Author: Amihai Ben-Arush
 The project and documentation are hosted on this Github repo for you to view and evaluate.  
 
 ### Kubernetes Cluster
-For the purpose of this assignment, I've used minikube to set up a Kubernetes cluster with two namespaces - `devops` where the pipeline is executed and `prod` where the production pods run.  
+For the purpose of this assignment, I've used minikube to set up a Kubernetes cluster with two namespaces - `devops` where the pipeline is executed and `prod` where web app is deployed.  
 
 ### CI/CD Pipeline
 The CI/CD pipeline is managed by Jenkins and executed using agent pods inside the K8s cluster.  
-Jenkins' configuration should be persistent, therefore it is deployed with a persistent volume.  
+Jenkins' configuration is stored in a persistent volume.  
 
 ### .NET Core sample application
 dotnet is used to build a simple landing page template as my sample app.  
@@ -34,15 +34,23 @@ For the building and containerizing stage, Jenkins uses a multistage Dockerfile 
    • Jenkins service for communicating with agents  
    • Jenkins PVC  
    • Jenkins PV  
+   • Jenkins-provisioned agent pods
 #### `prod` namespace:  
+   • Sample app deployment  
+   • Sample app service  
 
 ### Jenkins set up
-Jenkins master have no executors and run the pipeline on agent pods.
+<!-- Jenkins master have no executors and run the pipeline on agent pods.   -->
+#### Credentials:
+   • Github credentials  
+   • Docekr credentials  
+
 #### Jenkins plugins:
    • Pipeline  
    • Git  
-   • Docker  
-   • Kubernetes
+   • Docker pipeline  
+   • Kubernetes  
+   • Workspace Cleanup  
 
 
 ## Further improvements  
@@ -50,9 +58,11 @@ NodePort is sufficient for the scope of this project as it is running on just on
 Adding an NGINX controller and ingresses for both namespaces allow better scalability and reliability.  
 
 <!-- ## Installation
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Use format [link](https://example.com) to create a hyperlink.
 
 ```bash
-ls if [[ -z $1 ]]; then
-pip install foobar
-``` -->
+bash code block
+if [[ -z $1 ]]; then
+  ls
+fi -->
+```

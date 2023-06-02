@@ -1,0 +1,4 @@
+serviceType: NodePort
+
+persistence:
+  size: "2Gi"
