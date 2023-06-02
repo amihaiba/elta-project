@@ -1,9 +1,12 @@
 CURR_STAGE="Start"
 pipeline {
-    agent any
-    // agent {
-    //     label 'build-test'
-    // }
+    agent {
+        kubernetes {
+            yamlFile 'build-agent.yaml'
+            defaultContainer 'alpine'
+            idleMinutes 1
+        }
+    }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-cred')
         DOCKER_IMAGE_NAME = "amihaiba/eltamvc"
@@ -32,8 +35,11 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Build"
-                    GIT_COMMIT_REV = sh (script: 'git log -n 1 --pretty=format:%h', returnStdout: true)
-                    appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
+                    // GIT_COMMIT_REV = sh (script: 'git log -n 1 --pretty=format:%h', returnStdout: true)
+                    // appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
+                }
+                container('alpine') {
+                    sh 'uptime'
                 }
             }
         }
