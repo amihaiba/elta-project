@@ -9,4 +9,5 @@ spec:
   - name: builder
     image: jenkins/jnlp-agent-docker:latest
     command:
-    - sh 'docker build -t amihaiba/eltamvc:0.1.0 ./eltaMVC/'
+    - cat
+    tty: true
