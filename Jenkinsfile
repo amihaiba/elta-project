@@ -39,7 +39,9 @@ pipeline {
                     GIT_COMMIT_REV = sh (script: 'git log -n 1 --pretty=format:%h', returnStdout: true)
                 }
                 container('builder') {
-                    appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
+                    script {
+                        appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
+                    }
                 }
             }
         }
