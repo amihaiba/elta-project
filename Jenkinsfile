@@ -38,9 +38,10 @@ pipeline {
                     CURR_STAGE="Build"
                 }
                 container('builder') {
-                    script {
-                        appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-jenkins")
-                    }
+                    sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
+                    // script {
+                    //     appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-jenkins")
+                    // }
                 }
             }
         }
@@ -52,6 +53,9 @@ pipeline {
                     //     appImage.push("0.1.${BUILD_NUMBER}-${GIT_COMMIT_REV}")
                     //     appImage.push("latest")
                     // }
+                }
+                contaienr('builder') {
+                    sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
                 }
             }
         }
