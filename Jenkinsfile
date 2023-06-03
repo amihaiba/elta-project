@@ -3,7 +3,7 @@ pipeline {
     agent {
         kubernetes {
             yamlFile './kubernetes/kaniko-agent.yaml'
-            defaultContainer 'kaniki'
+            defaultContainer 'kaniko'
             idleMinutes 2
         }
     }
