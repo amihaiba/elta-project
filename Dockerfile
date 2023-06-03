@@ -3,10 +3,10 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 # Create a directory for the app and change to it
 WORKDIR /usr/local/sample-app
 # Copy csproj file and install dependencies
-COPY *.csproj .
+COPY eltaMVC/*.csproj .
 RUN dotnet restore
 # Copy all files in the project folder
-COPY . .
+COPY eltaMVC/ .
 # Build the app as a release
 RUN dotnet publish -c Release -o out
 
