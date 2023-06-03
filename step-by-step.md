@@ -7,6 +7,7 @@
 #### Start minikube
 ```bash
 minikube start
+minikube node add --worker
 ```
 #### Add namespaces
 ```bash
