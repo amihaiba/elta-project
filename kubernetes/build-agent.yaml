@@ -17,8 +17,6 @@ spec:
     volumeMounts:
     - name: docker-socket
       mountPath: /var/run/docker.sock
-    - name: git-data
-      mountPath: /home/jenkins/agent/workspace/elta-pipeline/eltaMVC
   volumes:
   - name: docker-socket
     hostPath:
