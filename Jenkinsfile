@@ -36,10 +36,10 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Build"
+                    GIT_COMMIT_REV = sh "git log -n 1 --pretty=format:%h"
                 }
                 container('builder') {
                     script {
-                        GIT_COMMIT_REV = sh "git log -n 1 --pretty=format:%h"
                         appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
                     }
                 }
