@@ -54,7 +54,7 @@ pipeline {
                     //     appImage.push("latest")
                     // }
                 }
-                contaienr('builder') {
+                container('builder') {
                     sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
                 }
             }
