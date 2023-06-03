@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: builder
+spec:
+  containers:
+  - name: builder
+    image: docker:24.0.2
+    command:
+    - cat
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+    tty: true
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run/docker.sock
+    - name: git-data
+      mountPath: /home/jenkins/agent/workspace/elta-pipeline/eltaMVC
+  volumes:
+  - name: docker-socket
+    hostPath:
+      path: /var/run/docker.sock

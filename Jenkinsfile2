@@ -1,0 +1,76 @@
+CURR_STAGE="Start"
+pipeline {
+    agent {
+        kubernetes {
+            yaml '''
+                apiVersion: v1
+                kind: Pod
+                metadata:
+                  labels:
+                    app: builder
+                spec:
+                  containers:
+                  - name: builder
+                    image: docker:24.0.2
+                    command:
+                    - cat
+                    tty: true
+                    volumeMounts:
+                    - name: docker-socket
+                      mountPath: /var/run/docker.sock
+                  volumes:
+                  - name: docker-socket
+                    hostPath:
+                      path: /var/run/docker.sock
+            '''
+            retries 2
+        }
+    }
+    
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker-cred')
+        DOCKER_IMAGE_NAME = "amihaiba/eltamvc"
+    }
+    
+    stages {
+        // stage('Clean up') {
+        //     steps {
+        //         script {
+        //             CURR_STAGE="Clean up"
+        //         }
+        //         cleanWs()
+        //     }
+        // }
+        stage('Git checkout') {
+            steps {
+                script {
+                    CURR_STAGE="Git checkout"
+                }
+                container('builder') {
+                    git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
+                }
+            }
+        }
+        stage('Build image') {
+            steps {
+                script {
+                    CURR_STAGE="Build image"
+                }
+                container('builder') {
+                    // sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
+                    
+                }
+            }
+        }
+        stage('Deliver image') {
+            steps {
+                script {
+                    CURR_STAGE="Deliver image"
+                }
+                container('builder') {
+                    
+                }
+            }
+        }
+    }
+}

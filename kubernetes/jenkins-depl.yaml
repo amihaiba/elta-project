@@ -40,81 +40,54 @@ spec:
           claimName: jenkins-pvc
 ---
 
-# Jenkins NodePort service to expose UI
 apiVersion: v1
 kind: Service
 metadata:
   name: jenkins
   namespace: devops
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/path:   /
+      prometheus.io/port:   '8080'
 spec:
-  type: NodePort
+  selector: 
+    app: jenkins
+  type: NodePort  
   ports:
-    - port: 8080
+    - name: http-port
+      port: 8080
       targetPort: 8080
-      nodePort: 30000
-  selector:
-    app: jenkins
----
-
-# Jenkins internal service to communicate with agents
-apiVersion: v1
-kind: Service
-metadata:
-  name: jenkins-jnlp
-  namespace: devops
-spec:
-  type: ClusterIP
-  ports:
-    - port: 50000
+      nodePort: 32000
+    - name: jnlp-port
+      port: 50000
       targetPort: 50000
-  selector:
-    app: jenkins
----
 
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: local-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+# # Jenkins NodePort service to expose UI
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: jenkins
+#   namespace: devops
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 8080
+#       targetPort: 8080
+#       nodePort: 30000
+#   selector:
+#     app: jenkins
+# ---
 
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: jenkins-pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: local-storage
-  claimRef:
-    name: jenkins-pvc
-    namespace: devops
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteOnce
-  local:
-    path: /mnt
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - minikube
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: jenkins-pvc
-  namespace: devops
-spec:
-  storageClassName: local-storage
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
+# # Jenkins internal service to communicate with agents
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: jenkins-jnlp
+#   namespace: devops
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 50000
+#       targetPort: 50000
+#   selector:
+#     app: jenkins

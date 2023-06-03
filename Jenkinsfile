@@ -2,7 +2,7 @@ CURR_STAGE="Start"
 pipeline {
     agent {
         kubernetes {
-            yamlFile 'build-agent.yaml'
+            yamlFile './kubernetes/build-agent.yaml'
             defaultContainer 'builder'
             idleMinutes 2
         }
@@ -12,15 +12,16 @@ pipeline {
         DOCKER_IMAGE_NAME = "amihaiba/eltamvc"
     }
     stages {
-        // Clean the project's workspace
-        stage('Clean') {
-            steps {
-                script {
-                    CURR_STAGE="Clean"
-                }
-                cleanWs()
-            }
-        }
+        // Clean the project's workspace (No need since containers are ephemeral)
+        // stage('Clean') {
+        //     steps {
+        //         script {
+        //             CURR_STAGE="Clean"
+        //         }
+        //         cleanWs()
+        //     }
+        // }
+
         // Fetch source files from the github repository
         stage('Git checkout') {
             steps {
@@ -39,8 +40,6 @@ pipeline {
                     // appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
                 }
                 container('builder') {
-                    sh 'ls'
-                    // sh 'docker version'
                     // sh 'docker build -t amihaiba/eltamvc:0.1.0 ./eltaMVC/'
                 }
             }
