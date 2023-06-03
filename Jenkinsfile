@@ -2,8 +2,8 @@ CURR_STAGE="Start"
 pipeline {
     agent {
         kubernetes {
-            yamlFile './kubernetes/build-agent.yaml'
-            defaultContainer 'builder'
+            yamlFile './kubernetes/kaniko-agent.yaml'
+            defaultContainer 'kaniki'
             idleMinutes 2
         }
     }
@@ -23,43 +23,37 @@ pipeline {
         // }
 
         // Fetch source files from the github repository
-        stage('Git checkout') {
-            steps {
-                script {
-                    CURR_STAGE="Git checkout"
-                }
-                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
-            }
-        }
+        // stage('Git checkout') {
+        //     steps {
+        //         script {
+        //             CURR_STAGE="Git checkout"
+        //         }
+        //         git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
+        //     }
+        // }
         // Build the docker image using a multistage Dockerfile
-        stage('Build') {
+        stage('Build and deliver') {
             steps {
                 script {
                     CURR_STAGE="Build"
                 }
-                container('builder') {
-                    sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
-                    // script {
-                    //     appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-jenkins")
-                    // }
+                container('kaniko') {
+                    // sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
+                    sh "/kaniko/executor --context=git://github.com/amihaiba/elta-project --destination=amihaiba/eltamvc:0.1.0-jenkins"
                 }
             }
         }
-        stage('Delivery') {
-            steps {
-                script {
-                    CURR_STAGE="Delivery"
-                    // docker.withRegistry('https://registry.hub.docker.com', 'docker-cred') {
-                    //     appImage.push("0.1.${BUILD_NUMBER}-${GIT_COMMIT_REV}")
-                    //     appImage.push("latest")
-                    // }
-                }
-                container('builder') {
-                    sh "echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER}"
-                    sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
-                }
-            }
-        }
+        // stage('Delivery') {
+        //     steps {
+        //         script {
+        //             CURR_STAGE="Delivery"
+        //         }
+        //         container('builder') {
+        //             // sh "echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER}"
+        //             // sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
+        //         }
+        //     }
+        // }
         stage('Deployment') {
             steps {
                 script {
