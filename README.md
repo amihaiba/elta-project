@@ -41,6 +41,8 @@ For the building and containerizing stage, Jenkins uses a multistage Dockerfile 
 
 ### Jenkins set up
 <!-- Jenkins master have no executors and run the pipeline on agent pods.   -->
+Jenkins need a deployment and service, a RBAC role in order to deploy agent pods, persistent storage to keep the configuration
+
 #### Credentials:
    • Github credentials  
    • Docekr credentials  
@@ -48,14 +50,13 @@ For the building and containerizing stage, Jenkins uses a multistage Dockerfile 
 #### Jenkins plugins:
    • Pipeline  
    • Git  
-   • Docker pipeline  
+   <!-- • Docker pipeline   -->
    • Kubernetes  
    • Workspace Cleanup  
 
 
 ## Further improvements  
-NodePort is sufficient for the scope of this project as it is running on just one node.  
-Adding an NGINX controller and ingresses for both namespaces allow better scalability and reliability.  
+NodePort is sufficient for the scope of this project as it is running on just one node but should be using an NGINX controller and ingress for both namespaces to allow better scalability and reliability.  
 
 <!-- ## Installation
 Use format [link](https://example.com) to create a hyperlink.

@@ -1,7 +1,9 @@
+# Sample app deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: eltamvc
+  namespace: prod
 spec:
   selector:
     matchLabels:
@@ -20,3 +22,18 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 5000
+---
+
+# Sample app service
+apiVersion: v1
+kind: Service
+metadata:
+  name: eltamvc
+  namespace: prod
+spec:
+  type: NodePort
+  selector:
+    app: eltamvc
+  ports:
+  - port: 5000
+    targetPort: 5000
