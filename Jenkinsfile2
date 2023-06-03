@@ -57,7 +57,7 @@ pipeline {
                     CURR_STAGE="Build image"
                 }
                 container('builder') {
-                    // sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
+                    sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
                     
                 }
             }

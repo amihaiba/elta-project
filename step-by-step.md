@@ -36,7 +36,7 @@ Add `jenkins` user with certificate:
 kubectl config set-credentials jenkins --client-certificate=jenkins.crt --client-key=jenkins.key
 kubectl config set-context jenkins --cluster=minikube --user=jenkins --namespace=devops
 ```
-Give permissiion to `jenkins` user
+Give permission to `jenkins` user
 ```bash
 kubectl apply -f kubernetes/jenkins-user.yaml
 ```
@@ -45,14 +45,26 @@ Switch context to use the new jenkins context:
 kubectl config use-context jenkins jenkins
 ```
 
-#### Start jenkins deployment
+#### Deploy Jenkins
 Create service account:
 ```bash
 kubectl apply -f kubernetes/jenkins-sa.yaml
 ```
-Create deployment, services, pv, pvc
+Create persistent volume resources:
+```bash
+kubectl apply -f kubernetes/jenkins-vol.yaml
+```
+Create deployment and service
 ```bash
 kubectl apply -f kubernetes/jenkins-depl.yaml
+```
+Create Dockerhub credentials secret
+```bash
+kubectl create secret docker-registry dockercred \
+--docker-server=https://index.docker.io/v1/ \
+--docker-username=<username> \
+--docker-password=<password> \
+--docker-email=<email>
 ```
 
 ## Jenkins configuration  

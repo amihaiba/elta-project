@@ -55,6 +55,7 @@ pipeline {
                     // }
                 }
                 container('builder') {
+                    sh "echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER}"
                     sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
                 }
             }
