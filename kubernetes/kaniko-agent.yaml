@@ -6,9 +6,10 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
+    command:
+    - sleep
     args:
-    - "--context=git://github.com/amihaiba/elta-project"
-    - "--destination=amihaiba/eltamvc:0.1.0-jenkins"
+    - 99999
     volumeMounts:
     - name: kaniko-secret
       mountPath: /kaniko/.docker
