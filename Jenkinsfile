@@ -36,11 +36,10 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Build"
-                    // GIT_COMMIT_REV = sh (script: 'git log -n 1 --pretty=format:%h', returnStdout: true)
-                    // appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
+                    GIT_COMMIT_REV = sh (script: 'git log -n 1 --pretty=format:%h', returnStdout: true)
                 }
                 container('builder') {
-                    // sh 'docker build -t amihaiba/eltamvc:0.1.0 ./eltaMVC/'
+                    appImage = docker.build("$DOCKER_IMAGE_NAME}:0.1.0-${GIT_COMMIT_REV}")
                 }
             }
         }
