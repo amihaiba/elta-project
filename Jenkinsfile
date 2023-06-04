@@ -2,8 +2,9 @@ CURR_STAGE="Start"
 pipeline {
     agent {
         kubernetes {
-            yamlFile './kubernetes/kaniko-agent.yaml'
-            defaultContainer 'kaniko'
+            // yamlFile './kubernetes/kaniko-agent.yaml'
+            yamlFile './kubernetes/build-agent.yaml'
+            defaultContainer 'builder'
             idleMinutes 2
         }
     }
@@ -13,14 +14,14 @@ pipeline {
     }
     stages {
         // Clean the project's workspace (No need since containers are ephemeral)
-        // stage('Clean') {
-        //     steps {
-        //         script {
-        //             CURR_STAGE="Clean"
-        //         }
-        //         cleanWs()
-        //     }
-        // }
+        stage('Clean') {
+            steps {
+                script {
+                    CURR_STAGE="Clean"
+                }
+                cleanWs()
+            }
+        }
 
         // Fetch source files from the github repository
         stage('Git checkout') {
@@ -37,11 +38,13 @@ pipeline {
                 script {
                     CURR_STAGE="Build"
                 }
-                container('kaniko') {
-                    // sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
-                    sh "/kaniko/executor --context=dir:///home/jenkins/agent/workspace/elta-pipeline --destination=amihaiba/eltamvc:0.1.0-jenkins"
-                    // sh "/kaniko/executor --context=git://github.com/amihaiba/elta-project --destination=amihaiba/eltamvc:0.1.0-jenkins"
+                container('builder') {
+                    sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
                 }
+                // container('kaniko') {
+                //     sh "/kaniko/executor --context=dir:///home/jenkins/agent/workspace/elta-pipeline --destination=amihaiba/eltamvc:0.1.0-jenkins"
+                //     sh "/kaniko/executor --context=git://github.com/amihaiba/elta-project --destination=amihaiba/eltamvc:0.1.0-jenkins"
+                // }
             }
         }
         // stage('Delivery') {
