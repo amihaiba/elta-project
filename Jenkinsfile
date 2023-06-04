@@ -33,7 +33,9 @@ pipeline {
                     GIT_COMMIT = sh 'git logs -n 1 --pretty=format"%h"'
                 }
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
-                echo ${GIT_COMMIT}
+                container('builder') {
+                    echo ${GIT_COMMIT}
+                }
             }
         }
         // Build the docker image using a multistage Dockerfile
