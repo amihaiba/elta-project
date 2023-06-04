@@ -72,7 +72,7 @@ pipeline {
             echo "Build number ${BUILD_DISPLAY_NAME} completed successfuly"
         }
         failure {
-            echo "Build number ${BUILD_DISPLAY_NAME} failed at ${STAGE_NAME} stage"
+            echo "Build number ${BUILD_DISPLAY_NAME} failed at ${CURR_STAGE} stage"
         }
         always {
             sh 'docker logout'

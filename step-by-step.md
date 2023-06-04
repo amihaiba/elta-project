@@ -38,7 +38,6 @@ minikube node add --worker
 kubectl create namespace devops
 kubectl create namespace prod
 ```
-Or allow the helm charts to create namespace resources
 
 #### Create an authorized `jenkins` user in kubernetes
 Generate a key:
