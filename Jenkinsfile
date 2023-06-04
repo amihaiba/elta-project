@@ -20,6 +20,9 @@ pipeline {
                     CURR_STAGE="Clean"
                 }
                 cleanWs()
+                // Clean up old images
+                // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
+                sh 'docker images'
             }
         }
 
@@ -52,8 +55,7 @@ pipeline {
                     CURR_STAGE="Delivery"
                 }
                 container('builder') {
-                    // sh "docker push ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins"
-                    sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..7]}-jenkins"
                 }
             }
         }
