@@ -2,7 +2,6 @@ CURR_STAGE = "Start"
 pipeline {
     agent {
         kubernetes {
-            // yamlFile './kubernetes/kaniko-agent.yaml'
             yamlFile './kubernetes/build-agent.yaml'
             defaultContainer 'builder'
             idleMinutes 2
@@ -63,8 +62,9 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Deployment"
+                    sh 'kubectl get pods'
                 }
-                kubernetesDeploy(configs: "kubernetes/eltamvc.yaml")
+                // kubernetesDeploy(configs: "kubernetes/eltamvc.yaml")
             }
         }
     }
