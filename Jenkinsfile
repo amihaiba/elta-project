@@ -38,8 +38,11 @@ pipeline {
                 script {
                     CURR_STAGE="Build"
                 }
-                container('builder') {
-                    sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline"
+                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
+                    container('builder') {
+                        sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
+                        sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline"
+                    }
                 }
                 // container('kaniko') {
                 //     sh "/kaniko/executor --context=dir:///home/jenkins/agent/workspace/elta-pipeline --destination=amihaiba/eltamvc:0.1.0-jenkins"
@@ -53,7 +56,6 @@ pipeline {
                     CURR_STAGE="Delivery"
                 }
                 container('builder') {
-                    sh "echo DuWv2kyP5Y35Whk | docker login -u amihaiba --password-stdin"
                     sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
                 }
             }
