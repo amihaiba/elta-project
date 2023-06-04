@@ -1,5 +1,4 @@
 CURR_STAGE = "Start"
-GIT_COMM = ""
 pipeline {
     agent {
         kubernetes {
@@ -32,7 +31,6 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE = "Git checkout"
-                    GIT_COMM = sh 'git log -n 1 --pretty=format:"%h"'
                 }
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
             }
@@ -46,7 +44,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
                         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..7]}-jenkins ${WORKSPACE}"
+                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
                     }
                 }
             }
