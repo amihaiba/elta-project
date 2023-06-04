@@ -62,7 +62,7 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
-                    sh "helm upgrade --set image=${IMAGE_FINAL} eltamvc eltamvc-chart/"
+                    sh "helm upgrade -n prod --set image=${IMAGE_FINAL} eltamvc eltamvc-chart/"
                 }
             }
         }
