@@ -17,6 +17,7 @@ The project and documentation are hosted on this Github repo for you to view and
 
 ### Kubernetes Cluster
 For the purpose of this assignment, I've used minikube to set up a Kubernetes cluster with two namespaces - `devops` where the pipeline is executed and `prod` where the web app is deployed.  
+I'm using a helm chart for the deployment of the web app.
 
 ### CI/CD Pipeline
 The CI/CD pipeline is managed by Jenkins and executed using agent pods inside the K8s cluster.  
