@@ -16,7 +16,7 @@ pipeline {
         stage('Clean') {
             steps {
                 script {
-                    CURR_STAGE="Clean"
+                    CURR_STAGE = ${STAGE_NAME}
                 }
                 cleanWs()
                 // Clean up old images
@@ -29,7 +29,7 @@ pipeline {
         stage('Git checkout') {
             steps {
                 script {
-                    CURR_STAGE = "Git checkout"
+                    CURR_STAGE = ${STAGE_NAME}
                 }
                 // git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
             }
@@ -38,7 +38,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    CURR_STAGE="Build"
+                    CURR_STAGE = ${STAGE_NAME}
                 }
                 // withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                 //     container('builder') {
@@ -51,7 +51,7 @@ pipeline {
         stage('Delivery') {
             steps {
                 script {
-                    CURR_STAGE="Delivery"
+                    CURR_STAGE = ${STAGE_NAME}
                 }
                 // container('builder') {
                 //     sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
@@ -61,7 +61,7 @@ pipeline {
         stage('Deployment') {
             steps {
                 script {
-                    CURR_STAGE="Deployment"
+                    CURR_STAGE = ${STAGE_NAME}
                 }
                 // container('builder') {
                 //     sh 'printenv'
@@ -77,7 +77,7 @@ pipeline {
             echo "Build number ${BUILD_DISPLAY_NAME} completed successfuly"
         }
         failure {
-            echo "Build number ${BUILD_DISPLAY_NAME} failed at ${STAGE_NAME} stage"
+            echo "Build number ${BUILD_DISPLAY_NAME} failed at ${CURR_STAGE} stage"
         }
         always {
             sh 'docker logout'
