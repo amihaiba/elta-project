@@ -1,0 +1,24 @@
+# eltamvc app deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.eltamvc.name }}
+  namespace: {{ .Values.eltamvc.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.eltamvc.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.eltamvc.name }}
+    spec:
+      containers:
+      - name: {{ .Values.eltamvc.name }}
+        image: {{ .Values.eltamvc.container.image }}
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: {{ .Values.eltamvc.service.ports.targetPort }}

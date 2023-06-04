@@ -12,15 +12,6 @@ pipeline {
         IMAGE_VERSION = "0.1.0"
     }
     stages {
-        // stage('Clean') {
-        //     steps {
-        //         script {
-        //             CURR_STAGE="Clean"
-        //         }
-        //         cleanWs()
-        //     }
-        // }
-
         // Fetch source files from the github repository
         stage('Git checkout') {
             steps {
@@ -44,6 +35,7 @@ pipeline {
                 }
             }
         }
+        // Deliver built image to Docker hub registry
         stage('Delivery') {
             steps {
                 script {
@@ -54,6 +46,7 @@ pipeline {
                 }
             }
         }
+        // Deploy application into `prod` namespace in the cluster
         stage('Deployment') {
             agent {
                 kubernetes {
@@ -67,9 +60,9 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
-                    sh "helm repo list"
-                    sh "sed -i 's|image:.*|image: ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins|g' kubernetes/eltamvc-depl.yaml"
-                    sh "kubectl apply -f ${WORKSPACE}/kubernetes/eltamvc-depl.yaml"
+                    sh "helm upgrade eltamvc eltamvc/"
+                    // sh "sed -i 's|image:.*|image: ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins|g' kubernetes/eltamvc-depl.yaml"
+                    // sh "kubectl apply -f ${WORKSPACE}/kubernetes/eltamvc-depl.yaml"
                 }
             }
         }

@@ -1,0 +1,10 @@
+eltamvc:
+  name: eltamvc
+  namespace: prod
+  container:
+    image: amihaiba/eltamvc:0.1.0
+  service:
+    kind: NodePort
+    ports:
+      port: 5000
+      targetPort: 5000

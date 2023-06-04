@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.eltamvc.name }}
+  namespace: {{ .Values.eltamvc.namespace }}
+spec:
+  type: {{ .Values.eltamvc.service.kind }}
+  selector:
+    app: {{ .Values.eltamvc.name }}
+  ports:
+  - port: {{ .Values.eltamvc.service.ports.port }}
+    targetPort: {{ .Values.eltamvc.service.ports.targetPort }}
