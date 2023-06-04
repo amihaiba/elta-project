@@ -27,7 +27,7 @@ pipeline {
                 }
                 cleanWs()
                 withKubeConfig([]) {
-                    contaienr('deployer') {
+                    container('deployer') {
                         sh 'kubectl get pods'
                     }
                 }
