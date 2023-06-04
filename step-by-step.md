@@ -3,6 +3,8 @@
 • Git  
 • Docker  
 • Minikube  
+• Github repository set up
+• Dockerhub repository set up
 ## Kubernetes configuration:
 #### Start minikube
 ```bash
@@ -36,9 +38,9 @@ Add `jenkins` user with certificate:
 kubectl config set-credentials jenkins --client-certificate=jenkins.crt --client-key=jenkins.key
 kubectl config set-context jenkins --cluster=minikube --user=jenkins --namespace=devops
 ```
-Give permission to `jenkins` user
+Give permission to `jenkins` user and create a service account for the jenkins deployment
 ```bash
-kubectl apply -f kubernetes/jenkins-user.yaml
+kubectl apply -f kubernetes/jenkins-sa.yaml
 ```
 Switch context to use the new jenkins context:
 ```bash
@@ -46,7 +48,7 @@ kubectl config use-context jenkins jenkins
 ```
 
 #### Deploy Jenkins
-Create service account:
+Create service account if it wasn't created earlier:
 ```bash
 kubectl apply -f kubernetes/jenkins-sa.yaml
 ```
@@ -58,20 +60,28 @@ Create deployment and service
 ```bash
 kubectl apply -f kubernetes/jenkins-depl.yaml
 ```
-Create Dockerhub credentials secret
+
+Deploy sample app to `prod` namespace:
+```bash
+kubectl apply -f kubernetes/eltamvc-depl.yaml
+```
+  
+<!-- Create Dockerhub credentials secret
 ```bash
 kubectl create secret docker-registry dockercred \
 --docker-server=https://index.docker.io/v1/ \
 --docker-username=<username> \
 --docker-password=<password> \
 --docker-email=<email>
-```
+``` -->
 
 ## Jenkins configuration  
 #### Install the following plugins:  
-• Pipeline  
-• Workspace Cleanup  
-• Git  
 • Kubernetes  
   
-Add Github and Docker-hub credentials  
+#### Add Github and Docker-hub credentials  
+Add Github's username and access-key  
+Add Dockerhub's username and access-key  
+
+#### Create a pipeline  
+Using pipeline
