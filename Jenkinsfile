@@ -9,7 +9,6 @@ pipeline {
         }
     }
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-cred')
         DOCKER_IMAGE_NAME = "amihaiba/eltamvc"
     }
     stages {
@@ -41,13 +40,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
                         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline"
+                        sh "docker build -t ${DOCKER_IMAGE_NAME}:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline"
                     }
                 }
-                // container('kaniko') {
-                //     sh "/kaniko/executor --context=dir:///home/jenkins/agent/workspace/elta-pipeline --destination=amihaiba/eltamvc:0.1.0-jenkins"
-                //     sh "/kaniko/executor --context=git://github.com/amihaiba/elta-project --destination=amihaiba/eltamvc:0.1.0-jenkins"
-                // }
             }
         }
         stage('Delivery') {
@@ -75,8 +70,8 @@ pipeline {
         failure {
             echo "Build number ${BUILD_DISPLAY_NAME} failed at ${CURR_STAGE} stage"
         }
-        // always {
-        //     sh 'docker logout'
-        // }
+        always {
+            sh 'docker logout'
+        }
     }
 }
