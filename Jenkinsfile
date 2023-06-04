@@ -13,20 +13,20 @@ pipeline {
     }
     stages {
         // Clean the project's workspace (No need since containers are ephemeral)
-        stage('Test') {
-            agent {
-                kubernetes {
-                    yamlFile './kubernetes/deploy-agent.yaml'
-                    defaultContainer 'deployer'
-                    idleMinutes 1
-                }
-            }
-            steps {
-                container('deployer') {
-                    sh 'kubectl get pods'
-                }
-            }
-        }
+        // stage('Test') {
+        //     agent {
+        //         kubernetes {
+        //             yamlFile './kubernetes/deploy-agent.yaml'
+        //             defaultContainer 'deployer'
+        //             idleMinutes 1
+        //         }
+        //     }
+        //     steps {
+        //         container('deployer') {
+        //             sh 'kubectl get pods'
+        //         }
+        //     }
+        // }
         stage('Clean') {
             steps {
                 script {
@@ -80,6 +80,9 @@ pipeline {
                 }
                 script {
                     CURR_STAGE = "Deployment"
+                }
+                container('deployer') {
+                    sh 'kubectl get pods -n prod'
                 }
             }
         }
