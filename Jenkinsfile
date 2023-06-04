@@ -67,6 +67,7 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
+                    sh "helm repo list"
                     sh "sed -i 's|image:.*|image: ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins|g' kubernetes/eltamvc-depl.yaml"
                     sh "kubectl apply -f ${WORKSPACE}/kubernetes/eltamvc-depl.yaml"
                 }
