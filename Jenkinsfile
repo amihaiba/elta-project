@@ -64,7 +64,9 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
-
+                container('builder') {
+                    sh 'kubectl get all -n devops'
+                }
             }
         }
     }
