@@ -31,21 +31,21 @@ pipeline {
                 script {
                     CURR_STAGE = "Git checkout"
                 }
-                // git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
+                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
             }
         }
         // Build the docker image using a multistage Dockerfile
-        stage('Build and deliver') {
+        stage('Build') {
             steps {
                 script {
                     CURR_STAGE="Build"
                 }
-                // withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
-                //     container('builder') {
-                //         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                //         sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
-                //     }
-                // }
+                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
+                    container('builder') {
+                        sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
+                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
+                    }
+                }
             }
         }
         stage('Delivery') {
@@ -53,9 +53,9 @@ pipeline {
                 script {
                     CURR_STAGE="Delivery"
                 }
-                // container('builder') {
-                //     sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
-                // }
+                container('builder') {
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
+                }
             }
         }
         stage('Deployment') {
