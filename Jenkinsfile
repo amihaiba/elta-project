@@ -22,10 +22,8 @@ pipeline {
                 }
             }
             steps {
-                withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
-                    container('deployer') {
-                        sh 'kubectl get pods'
-                    }
+                container('deployer') {
+                    sh 'kubectl get pods'
                 }
             }
         }
