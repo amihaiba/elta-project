@@ -40,9 +40,9 @@ pipeline {
                 }
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
-                        sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-jenkins ${WORKSPACE}"
-                        sh "echo ${GIT_COMMIT,length=6}"
+                        // sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
+                        // sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-jenkins ${WORKSPACE}"
+                        sh "echo ${GIT_COMMIT[0..7]}"
                     }
                 }
             }
