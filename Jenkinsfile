@@ -12,29 +12,14 @@ pipeline {
         IMAGE_VERSION = "0.1.0"
     }
     stages {
-        // Clean the project's workspace (No need since containers are ephemeral)
-        // stage('Test') {
-        //     agent {
-        //         kubernetes {
-        //             yamlFile './kubernetes/deploy-agent.yaml'
-        //             defaultContainer 'deployer'
-        //             idleMinutes 1
-        //         }
-        //     }
+        // stage('Clean') {
         //     steps {
-        //         container('deployer') {
-        //             sh 'kubectl get pods'
+        //         script {
+        //             CURR_STAGE="Clean"
         //         }
+        //         cleanWs()
         //     }
         // }
-        stage('Clean') {
-            steps {
-                script {
-                    CURR_STAGE="Clean"
-                }
-                cleanWs()
-            }
-        }
 
         // Fetch source files from the github repository
         stage('Git checkout') {
@@ -70,14 +55,14 @@ pipeline {
             }
         }
         stage('Deployment') {
-            steps {
-                agent {
-                    kubernetes {
-                        yamlFile './kubernetes/deploy-agent.yaml'
-                        defaultContainer 'deployer'
-                        idleMinutes 1
-                    }
+            agent {
+                kubernetes {
+                    yamlFile './kubernetes/deploy-agent.yaml'
+                    defaultContainer 'deployer'
+                    idleMinutes 1
                 }
+            }
+            steps {
                 script {
                     CURR_STAGE = "Deployment"
                 }
