@@ -62,7 +62,7 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Deployment"
-                // }
+                }
                 // withKubeConfig(serverUrl: '192.168.49.2:32000') {
                 //     sh 'kubectl get pods'
                 // }
