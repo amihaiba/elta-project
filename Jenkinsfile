@@ -82,7 +82,8 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
-                    sh 'kubectl apply -n prod -f '
+                    // sh 'kubectl get pods'
+                    sh "kubectl apply -f ${WORKSPACE}/kubernetes/eltamvc-depl.yaml"
                 }
             }
         }
