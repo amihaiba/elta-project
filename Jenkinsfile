@@ -9,7 +9,9 @@ pipeline {
         }
     }
     environment {
-        DOCKER_IMAGE_NAME = "amihaiba/eltamvc"
+        IMAGE_NAME = "amihaiba/eltamvc"
+        IMAGE_MAJOR = 0
+        IMAGE_MINOR = 1
     }
     stages {
         // Clean the project's workspace (No need since containers are ephemeral)
@@ -40,7 +42,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
                         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        sh "docker build -t ${DOCKER_IMAGE_NAME}:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline"
+                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.${BUILD_NUMBER}-jenkins ${WORKSPACE}/elta-pipeline"
                     }
                 }
             }
@@ -51,7 +53,7 @@ pipeline {
                     CURR_STAGE="Delivery"
                 }
                 container('builder') {
-                    sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
+                    sh "docker push ${IMAGE_NAME}:0.1.0-jenkins"
                 }
             }
         }
