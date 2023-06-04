@@ -1,4 +1,5 @@
 CURR_STAGE = "Start"
+GIT_COMM = ""
 pipeline {
     agent {
         kubernetes {
@@ -22,7 +23,7 @@ pipeline {
                 cleanWs()
                 // Clean up old images
                 // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
-                sh 'docker images'
+                // sh 'docker images'
             }
         }
 
@@ -31,6 +32,7 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE = "Git checkout"
+                    GIT_COMM = sh 'git log -n 1 --pretty=format:"%h"'
                 }
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
             }
@@ -55,7 +57,7 @@ pipeline {
                     CURR_STAGE="Delivery"
                 }
                 container('builder') {
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..7]}-jenkins"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
                 }
             }
         }
@@ -64,6 +66,7 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
+
             }
         }
     }
