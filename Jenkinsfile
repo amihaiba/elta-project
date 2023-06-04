@@ -17,6 +17,7 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Clean"
+                    kubectl 'get pods'
                 }
                 cleanWs()
                 // Clean up old images
@@ -42,8 +43,8 @@ pipeline {
                 }
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     // container('builder') {
-                    sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
+                    //     sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
+                    //     sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
                     // }
                 }
             }
