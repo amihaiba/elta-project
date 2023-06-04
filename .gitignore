@@ -4,3 +4,5 @@ venv/
 bin/
 obj/
 whitelist.gitignore
+canvas.txt
+mail
