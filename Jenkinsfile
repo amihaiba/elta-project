@@ -40,9 +40,8 @@ pipeline {
                 }
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
-                        // sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        // sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-jenkins ${WORKSPACE}"
-                        sh "echo ${GIT_COMMIT[0..7]}"
+                        sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
+                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..7]}-jenkins ${WORKSPACE}"
                     }
                 }
             }
@@ -52,9 +51,10 @@ pipeline {
                 script {
                     CURR_STAGE="Delivery"
                 }
-                // container('builder') {
-                //     sh "docker push ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins"
-                // }
+                container('builder') {
+                    // sh "docker push ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins"
+                    sh 'docker images | grep " [days|months|weeks|years]* ago" | awk '{print $3}')'
+                }
             }
         }
         stage('Deployment') {
