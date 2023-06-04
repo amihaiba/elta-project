@@ -27,9 +27,10 @@ pipeline {
                 }
                 cleanWs()
                 withKubeConfig([]) {
-                    container('deployer') {
-                        sh 'kubectl get pods'
-                    }
+                    // container('deployer') {
+                    //     sh 'kubectl get pods'
+                    // }
+                    sh 'kubectl get pods'
                 }
                 // Clean up old images
                 // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
