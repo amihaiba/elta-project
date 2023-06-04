@@ -64,9 +64,7 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
-                container('jlnp') {
-                    sh 'kubectl get all -n devops'
-                }
+                kubernetesDeploy(configs: "kubernetes/eltamvc.yaml")
             }
         }
     }
