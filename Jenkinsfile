@@ -60,7 +60,7 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
-                    sh "helm upgrade --set image: ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins eltamvc eltamvc/"
+                    sh "helm upgrade --set image=${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins eltamvc eltamvc/"
                     // sh "sed -i 's|image:.*|image: ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins|g' eltamvc/values.yaml"
                     // sh "kubectl apply -f ${WORKSPACE}/kubernetes/eltamvc-depl.yaml"
                 }
