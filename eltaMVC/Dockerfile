@@ -3,10 +3,10 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 # Create a directory for the app and change to it
 WORKDIR /usr/local/sample-app
 # Copy csproj file and install dependencies
-COPY eltaMVC/*.csproj .
+COPY *.csproj .
 RUN dotnet restore
 # Copy all files in the project folder
-COPY eltaMVC/ .
+COPY . .
 # Build the app as a release
 RUN dotnet publish -c Release -o out
 
@@ -19,4 +19,5 @@ WORKDIR /usr/local/sample-app
 # Copy built app into the runtime image
 COPY --chown=elta-user:elta --from=build-env /usr/local/sample-app/out .
 # USER elta-user
+EXPOSE 5000
 ENTRYPOINT dotnet eltaMVC.dll --urls="http://0.0.0.0:5000"

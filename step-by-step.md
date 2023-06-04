@@ -44,8 +44,10 @@ kubectl apply -f kubernetes/jenkins-sa.yaml
 ```
 Switch context to use the new jenkins context:
 ```bash
-kubectl config use-context jenkins jenkins
+kubectl config use-context jenkins
 ```
+
+
 
 #### Deploy Jenkins
 Create service account if it wasn't created earlier:
@@ -65,15 +67,6 @@ Deploy sample app to `prod` namespace:
 ```bash
 kubectl apply -f kubernetes/eltamvc-depl.yaml
 ```
-  
-<!-- Create Dockerhub credentials secret
-```bash
-kubectl create secret docker-registry dockercred \
---docker-server=https://index.docker.io/v1/ \
---docker-username=<username> \
---docker-password=<password> \
---docker-email=<email>
-``` -->
 
 ## Jenkins configuration  
 #### Install the following plugins:  
@@ -84,4 +77,24 @@ Add Github's username and access-key
 Add Dockerhub's username and access-key  
 
 #### Create a pipeline  
-Using pipeline
+Using Jenkins' pipeline tool  
+The pipeline perform the following stages:  
+Git checkout - pull source files from the Github repo.  
+Build - builds the application using a multistage Dockerfile
+
+## Application
+#### Create an application template using dotnet:
+```bash
+dotnet new mvc -o eltaMVC --no-https
+```
+#### Check the app is working and website is available:
+```bash
+dotnet run --urls=http://localhost:5000
+```
+Enter the url and check the website is a available.  
+#### Create and run app inside a container, and push to docker registry:
+```bash
+docker build -t amihaiba/eltamvc:0.1.0 .
+docker run -ti -p 5000:5000 --name dotnet-test amihaiba/eltamvc:0.1.0
+docker push amihaiba/eltamvc:0.1.0
+```
