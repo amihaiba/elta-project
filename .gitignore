@@ -6,3 +6,6 @@ obj/
 whitelist.gitignore
 canvas.txt
 mail
+jenkins.crt
+jenkins.csr
+jenkins.key

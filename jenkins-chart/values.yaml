@@ -1,6 +1,6 @@
 # Jenkins master deployment
 jenkins: 
-  name: Jenkins
+  name: jenkins
   namespace: devops
   replicas: 1
   securityContext:
@@ -8,10 +8,14 @@ jenkins:
     runAsUser: 1000
   container: 
     image: jenkins/jenkins:2.401.1-lts
+  service:
+    kind: NodePort
     ports:
       http: 8080
       jnlp: 50000
+      nodePort: 32000
   volumes:
     name: jenkins-data
+    mountPath: /var/jenkins_home
   pvc:
     name: jenkins-pvc

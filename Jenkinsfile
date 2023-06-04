@@ -21,9 +21,6 @@ pipeline {
                     IMAGE_FINAL = "${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
                 }
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
-                // script {
-                    
-                // }
             }
         }
         // Build the docker image using a multistage Dockerfile
@@ -65,7 +62,7 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
-                    sh "helm upgrade --set image=${IMAGE_FINAL} eltamvc eltamvc/"
+                    sh "helm upgrade --set image=${IMAGE_FINAL} eltamvc eltamvc-chart/"
                 }
             }
         }

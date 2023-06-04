@@ -1,0 +1,40 @@
+# Jeknins master deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.jenkins.name }}
+  namespace: {{ .Values.jenkins.namespace }}
+spec:
+  replicas: {{ .Values.jenkins.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.jenkins.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.jenkins.name }}
+    spec:
+      serviceAccount: {{ .Values.jenkins.name }}
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      containers:
+      - name: {{ .Values.jenkins.name }}
+        image: {{ .Values.jenkins.container.image }}
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"
+        ports:
+          - name: http-port
+            containerPort: {{ .Values.jenkins.service.ports.http }}
+          - name: jnlp-port
+            containerPort: {{ .Values.jenkins.service.ports.jnlp }}
+        volumeMounts:
+          - name: {{ .Values.jenkins.volumes.name }}
+            mountPath: {{ .Values.jenkins.volumes.mountPath }}
+      volumes:
+      - name: {{ .Values.jenkins.volumes.name }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.jenkins.pvc.name }}

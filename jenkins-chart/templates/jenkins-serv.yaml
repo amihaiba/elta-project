@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.jenkins.name }}
+  namespace: {{ .Values.jenkins.namespace }}
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/path:   /
+      prometheus.io/port:   '{{ .Values.jenkins.service.ports.http }}'
+spec:
+  selector: 
+    app: {{ .Values.jenkins.name }}
+  type: {{ .Values.jenkins.service.kind }}  
+  ports:
+    - name: http-port
+      port: {{ .Values.jenkins.service.ports.http }}
+      targetPort: {{ .Values.jenkins.service.ports.http }}
+      nodePort: {{ .Values.jenkins.service.ports.nodePort }}
+    - name: jnlp-port
+      port: {{ .Values.jenkins.service.ports.jnlp }}
+      targetPort: {{ .Values.jenkins.service.ports.jnlp }}
