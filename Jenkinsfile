@@ -24,9 +24,6 @@ pipeline {
                 //         sh 'kubectl get pods'
                 //     }
                 // }
-                // Clean up old images
-                // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
-                // sh 'docker images'
             }
         }
 
@@ -75,9 +72,9 @@ pipeline {
                 script {
                     CURR_STAGE = "Deployment"
                 }
-                // withKubeConfig([serverUrl: 'kubernetes.default.svc']) {
-                //     sh 'kubectl get pods'
-                // }
+                withKubeConfig([serverUrl: ${APISERVER}]) {
+                    sh 'kubectl get pods'
+                }
             }
         }
     }
