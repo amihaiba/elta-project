@@ -1,4 +1,5 @@
 CURR_STAGE = "Start"
+IMAGE_FINAL = ""
 pipeline {
     agent {
         kubernetes {
@@ -19,6 +20,9 @@ pipeline {
                     CURR_STAGE = "Git checkout"
                 }
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
+                script {
+                    IMAGE_FINAL = "${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
+                }
             }
         }
         // Build the docker image using a multistage Dockerfile
@@ -30,7 +34,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
                         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}/eltaMVC"
+                        sh "docker build -t ${IMAGE_FINAL} ${WORKSPACE}/eltaMVC"
                     }
                 }
             }
@@ -42,7 +46,7 @@ pipeline {
                     CURR_STAGE="Delivery"
                 }
                 container('builder') {
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
+                    sh "docker push ${IMAGE_FINAL}"
                 }
             }
         }
@@ -60,7 +64,7 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
-                    sh "helm upgrade --set image=${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins eltamvc eltamvc/"
+                    sh "helm upgrade --set image=${IMAGE_FINAL} eltamvc eltamvc/"
                     // sh "sed -i 's|image:.*|image: ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins|g' eltamvc/values.yaml"
                     // sh "kubectl apply -f ${WORKSPACE}/kubernetes/eltamvc-depl.yaml"
                 }
