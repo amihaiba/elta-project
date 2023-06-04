@@ -39,7 +39,7 @@ pipeline {
                     CURR_STAGE="Build"
                 }
                 container('builder') {
-                    sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
+                    sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline"
                 }
                 // container('kaniko') {
                 //     sh "/kaniko/executor --context=dir:///home/jenkins/agent/workspace/elta-pipeline --destination=amihaiba/eltamvc:0.1.0-jenkins"
@@ -47,17 +47,17 @@ pipeline {
                 // }
             }
         }
-        // stage('Delivery') {
-        //     steps {
-        //         script {
-        //             CURR_STAGE="Delivery"
-        //         }
-        //         container('builder') {
-        //             // sh "echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER}"
-        //             // sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
-        //         }
-        //     }
-        // }
+        stage('Delivery') {
+            steps {
+                script {
+                    CURR_STAGE="Delivery"
+                }
+                container('builder') {
+                    sh "echo DuWv2kyP5Y35Whk | docker login -u amihaiba --password-stdin"
+                    sh "docker push amihaiba/eltamvc:0.1.0-jenkins"
+                }
+            }
+        }
         stage('Deployment') {
             steps {
                 script {
