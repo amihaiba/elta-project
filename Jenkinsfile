@@ -40,12 +40,12 @@ pipeline {
                 script {
                     CURR_STAGE="Build"
                 }
-                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
-                    container('builder') {
-                        sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        // sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
-                    }
-                }
+                // withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
+                //     container('builder') {
+                //         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
+                //         sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
+                //     }
+                // }
             }
         }
         stage('Delivery') {
@@ -63,13 +63,12 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
-                withKubeConfig([serverUrl: '192.168.49.2']) {
-                    sh 'kubectl get pods'
+                container('builder') {
+                    sh 'printenv'
                 }
-                // container('builder') {
+                // withKubeConfig([serverUrl: '192.168.49.2']) {
                 //     sh 'kubectl get pods'
                 // }
-                // kubernetesDeploy(configs: "kubernetes/eltamvc.yaml")
             }
         }
     }
