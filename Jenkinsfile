@@ -30,12 +30,9 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE = "Git checkout"
-                    GIT_COMMIT = sh 'git logs -n 1 --pretty=format"%h"'
                 }
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
-                container('builder') {
-                    echo ${GIT_COMMIT}
-                }
+                GIT_COMMIT = sh 'git logs -n 1 --pretty=format"%h"'
             }
         }
         // Build the docker image using a multistage Dockerfile
@@ -48,6 +45,7 @@ pipeline {
                     container('builder') {
                         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
                         sh "docker build -t ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins ${WORKSPACE}"
+                        sh "echo ${GIT_COMMIT}"
                     }
                 }
             }
