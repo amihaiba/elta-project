@@ -13,17 +13,28 @@ pipeline {
     }
     stages {
         // Clean the project's workspace (No need since containers are ephemeral)
+        stage('Test') {
+            agent {
+                kubernetes {
+                    yamlFile './kubernetes/deploy-agent.yaml'
+                    defaultContainer 'deployer'
+                    idleMinutes 1
+                }
+            }
+            steps {
+                withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
+                    container('deployer') {
+                        sh 'kubectl get pods'
+                    }
+                }
+            }
+        }
         stage('Clean') {
             steps {
                 script {
                     CURR_STAGE="Clean"
                 }
                 cleanWs()
-                // withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
-                //     container('deployer') {
-                //         sh 'kubectl get pods'
-                //     }
-                // }
             }
         }
 
@@ -71,11 +82,6 @@ pipeline {
                 }
                 script {
                     CURR_STAGE = "Deployment"
-                }
-                withKubeConfig([serverUrl: "${APISERVER}"]) {
-                    container('deployer') {
-                        sh 'kubectl get pods'
-                    }
                 }
             }
         }
