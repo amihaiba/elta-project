@@ -63,12 +63,12 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
-                container('builder') {
-                    sh 'printenv'
-                }
-                // withKubeConfig([serverUrl: '192.168.49.2']) {
-                //     sh 'kubectl get pods'
+                // container('builder') {
+                //     sh 'printenv'
                 // }
+                withKubeConfig([serverUrl: 'kubernetes.default.svc']) {
+                    sh 'kubectl get pods'
+                }
             }
         }
     }
@@ -77,7 +77,7 @@ pipeline {
             echo "Build number ${BUILD_DISPLAY_NAME} completed successfuly"
         }
         failure {
-            echo "Build number ${BUILD_DISPLAY_NAME} failed at ${CURR_STAGE} stage"
+            echo "Build number ${BUILD_DISPLAY_NAME} failed at ${STAGE_NAME} stage"
         }
         always {
             sh 'docker logout'
