@@ -22,7 +22,7 @@ pipeline {
         //     }
         // }
 
-        Fetch source files from the github repository
+        // Fetch source files from the github repository
         stage('Git checkout') {
             steps {
                 script {
