@@ -1,10 +1,17 @@
 CURR_STAGE = "Start"
 pipeline {
+    // agent {
+    //     kubernetes {
+    //         yamlFile './kubernetes/build-agent.yaml'
+    //         defaultContainer 'builder'
+    //         idleMinutes 1
+    //     }
+    // }
     agent {
         kubernetes {
-            yamlFile './kubernetes/build-agent.yaml'
-            defaultContainer 'builder'
-            idleMinutes 2
+            yamlFile './kubernetes/deploy-agent.yaml'
+            defaultContainer 'deployer'
+            idleMinutes 1
         }
     }
     environment {
@@ -17,9 +24,11 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Clean"
-                    kubectl 'get pods'
                 }
                 cleanWs()
+                container('deployer') {
+                    sh 'kubectl get pods'
+                }
                 // Clean up old images
                 // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
                 // sh 'docker images'
@@ -41,12 +50,12 @@ pipeline {
                 script {
                     CURR_STAGE="Build"
                 }
-                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
-                    // container('builder') {
-                    //     sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                    //     sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
-                    // }
-                }
+                // withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
+                //     container('builder') {
+                //         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
+                //         sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins ${WORKSPACE}"
+                //     }
+                // }
             }
         }
         stage('Delivery') {
