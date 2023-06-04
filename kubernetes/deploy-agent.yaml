@@ -10,7 +10,6 @@ spec:
   containers:
   - name: deployer
     image: dtzar/helm-kubectl:3.12
-    # image: bitnami/kubectl:1.27.2
     command:
     - cat
     resources:
@@ -18,10 +17,10 @@ spec:
         cpu: "500m"
         memory: "1024Mi"
     tty: true
-    volumeMounts:
-    - name: docker-socket
-      mountPath: /var/run/docker.sock
-  volumes:
-  - name: docker-socket
-    hostPath:
-      path: /var/run/docker.sock
+  #   volumeMounts:
+  #   - name: docker-socket
+  #     mountPath: /var/run/docker.sock
+  # volumes:
+  # - name: docker-socket
+  #   hostPath:
+  #     path: /var/run/docker.sock
