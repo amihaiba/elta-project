@@ -82,7 +82,7 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 container('deployer') {
-                    sh 'kubectl get pods -n prod'
+                    sh 'kubectl apply -n prod -f '
                 }
             }
         }
