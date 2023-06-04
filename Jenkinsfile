@@ -1,24 +1,19 @@
 CURR_STAGE = "Start"
 pipeline {
-    // agent {
-    //     kubernetes {
-    //         yamlFile './kubernetes/build-agent.yaml'
-    //         defaultContainer 'builder'
-    //         idleMinutes 1
-    //     }
-    // }
-    agent {
-        kubernetes {
-            yamlFile './kubernetes/deploy-agent.yaml'
-            defaultContainer 'deployer'
-            idleMinutes 1
-        }
-    }
+    agent none
+
     environment {
         IMAGE_NAME = "amihaiba/eltamvc"
         IMAGE_VERSION = "0.1.0"
     }
     stages {
+        agent {
+            kubernetes {
+                yamlFile './kubernetes/build-agent.yaml'
+                defaultContainer 'builder'
+                idleMinutes 1
+            }
+        }
         // Clean the project's workspace (No need since containers are ephemeral)
         stage('Clean') {
             steps {
@@ -27,10 +22,9 @@ pipeline {
                 }
                 cleanWs()
                 withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
-                    // container('deployer') {
-                    //     sh 'kubectl get pods'
-                    // }
-                    sh 'kubectl get pods'
+                    container('deployer') {
+                        sh 'kubectl get pods'
+                    }
                 }
                 // Clean up old images
                 // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
@@ -69,6 +63,13 @@ pipeline {
                 // container('builder') {
                 //     sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
                 // }
+            }
+        }
+        agent {
+            kubernetes {
+                yamlFile './kubernetes/deploy-agent.yaml'
+                defaultContainer 'deployer'
+                idleMinutes 1
             }
         }
         stage('Deployment') {
