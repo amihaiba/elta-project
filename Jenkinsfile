@@ -53,7 +53,7 @@ pipeline {
                 }
                 container('builder') {
                     // sh "docker push ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins"
-                    sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}")'
+                    sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
                 }
             }
         }
