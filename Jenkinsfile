@@ -60,16 +60,15 @@ pipeline {
         }
         stage('Deployment') {
             steps {
-                // script {
-                //     CURR_STAGE = "Deployment"
-                // }
-                CURR_STAGE = ${STAGE_NAME}
+                script {
+                    CURR_STAGE = "Deployment"
+                }
                 // container('builder') {
                 //     sh 'printenv'
                 // }
-                withKubeConfig([serverUrl: 'kubernetes.default.svc']) {
-                    sh 'kubectl get pods'
-                }
+                // withKubeConfig([serverUrl: 'kubernetes.default.svc']) {
+                //     sh 'kubectl get pods'
+                // }
             }
         }
     }
