@@ -63,13 +63,13 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
-                // withKubeConfig(serverUrl: '192.168.49.2:32000') {
-                //     sh 'kubectl get pods'
-                // }
+                withKubeConfig([credentialsId: 'kubeconfig']) { //serverUrl: '192.168.49.2:32000'
+                    sh 'kubectl get pods'
+                }
                 // container('builder') {
                 //     sh 'kubectl get pods'
                 // }
-                kubernetesDeploy(configs: "kubernetes/eltamvc.yaml")
+                // kubernetesDeploy(configs: "kubernetes/eltamvc.yaml")
             }
         }
     }
