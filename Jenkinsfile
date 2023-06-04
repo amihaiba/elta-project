@@ -1,7 +1,12 @@
 CURR_STAGE = "Start"
 pipeline {
-    agent none
-
+    agent {
+        kubernetes {
+            yamlFile './kubernetes/build-agent.yaml'
+            defaultContainer 'builder'
+            idleMinutes 1
+        }
+    }
     environment {
         IMAGE_NAME = "amihaiba/eltamvc"
         IMAGE_VERSION = "0.1.0"
@@ -9,23 +14,16 @@ pipeline {
     stages {
         // Clean the project's workspace (No need since containers are ephemeral)
         stage('Clean') {
-            agent {
-                kubernetes {
-                    yamlFile './kubernetes/build-agent.yaml'
-                    defaultContainer 'builder'
-                    idleMinutes 1
-                }
-            }
             steps {
                 script {
                     CURR_STAGE="Clean"
                 }
                 cleanWs()
-                // withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
-                //     container('deployer') {
-                //         sh 'kubectl get pods'
-                //     }
-                // }
+                withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
+                    container('deployer') {
+                        sh 'kubectl get pods'
+                    }
+                }
                 // Clean up old images
                 // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
                 // sh 'docker images'
@@ -34,13 +32,6 @@ pipeline {
 
         // Fetch source files from the github repository
         stage('Git checkout') {
-            agent {
-                kubernetes {
-                    yamlFile './kubernetes/build-agent.yaml'
-                    defaultContainer 'builder'
-                    idleMinutes 1
-                }
-            }
             steps {
                 script {
                     CURR_STAGE = "Git checkout"
@@ -50,13 +41,6 @@ pipeline {
         }
         // Build the docker image using a multistage Dockerfile
         stage('Build') {
-            agent {
-                kubernetes {
-                    yamlFile './kubernetes/build-agent.yaml'
-                    defaultContainer 'builder'
-                    idleMinutes 1
-                }
-            }
             steps {
                 script {
                     CURR_STAGE="Build"
@@ -70,13 +54,6 @@ pipeline {
             }
         }
         stage('Delivery') {
-            agent {
-                kubernetes {
-                    yamlFile './kubernetes/build-agent.yaml'
-                    defaultContainer 'builder'
-                    idleMinutes 1
-                }
-            }
             steps {
                 script {
                     CURR_STAGE="Delivery"
@@ -87,14 +64,14 @@ pipeline {
             }
         }
         stage('Deployment') {
-            agent {
-                kubernetes {
-                    yamlFile './kubernetes/deploy-agent.yaml'
-                    defaultContainer 'deployer'
-                    idleMinutes 1
-                }
-            }
             steps {
+                agent {
+                    kubernetes {
+                        yamlFile './kubernetes/deploy-agent.yaml'
+                        defaultContainer 'deployer'
+                        idleMinutes 1
+                    }
+                }
                 script {
                     CURR_STAGE = "Deployment"
                 }
