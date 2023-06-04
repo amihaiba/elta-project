@@ -6,7 +6,7 @@ metadata:
   labels:
     app: builder
 spec:
-  serviceAccount: jenkins
+  # serviceAccount: jenkins
   containers:
   - name: builder
     image: docker:24.0.2
