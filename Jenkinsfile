@@ -62,6 +62,8 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE="Deployment"
+                }
+                container('builder') {
                     sh 'kubectl get pods'
                 }
                 // kubernetesDeploy(configs: "kubernetes/eltamvc.yaml")
