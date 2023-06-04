@@ -26,7 +26,7 @@ pipeline {
                     CURR_STAGE="Clean"
                 }
                 cleanWs()
-                withKubeConfig([serverUrl: 'kubernetes.default.svc']) {
+                withKubeConfig([]) {
                     contaienr('deployer') {
                         sh 'kubectl get pods'
                     }
