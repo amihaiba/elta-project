@@ -18,11 +18,12 @@ pipeline {
             steps {
                 script {
                     CURR_STAGE = "Git checkout"
-                }
-                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
-                script {
                     IMAGE_FINAL = "${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
                 }
+                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
+                // script {
+                    
+                // }
             }
         }
         // Build the docker image using a multistage Dockerfile
@@ -65,8 +66,6 @@ pipeline {
                 }
                 container('deployer') {
                     sh "helm upgrade --set image=${IMAGE_FINAL} eltamvc eltamvc/"
-                    // sh "sed -i 's|image:.*|image: ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins|g' eltamvc/values.yaml"
-                    // sh "kubectl apply -f ${WORKSPACE}/kubernetes/eltamvc-depl.yaml"
                 }
             }
         }
