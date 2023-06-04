@@ -10,8 +10,7 @@ pipeline {
     }
     environment {
         IMAGE_NAME = "amihaiba/eltamvc"
-        IMAGE_MAJOR = 0
-        IMAGE_MINOR = 1
+        IMAGE_VERSION = "0.1.0"
     }
     stages {
         // Clean the project's workspace (No need since containers are ephemeral)
@@ -42,8 +41,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
                         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins ${WORKSPACE}"
-                        sh "echo ${GIT_COMMIT}"
+                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_VERSION}-jenkins ${WORKSPACE}"
+                        sh "echo ${GIT_COMMIT,length=6}"
                     }
                 }
             }
@@ -53,9 +52,9 @@ pipeline {
                 script {
                     CURR_STAGE="Delivery"
                 }
-                container('builder') {
-                    sh "docker push ${IMAGE_NAME}:0.1.0-jenkins"
-                }
+                // container('builder') {
+                //     sh "docker push ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins"
+                // }
             }
         }
         stage('Deployment') {
