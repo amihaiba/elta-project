@@ -54,6 +54,7 @@ pipeline {
                 script {
                     CURR_STAGE="Delivery"
                 }
+                kubernetesDeploy(configs: "")
                 // container('builder') {
                 //     sh "docker push ${IMAGE_NAME}:${IMAGE_VERSION}-${GIT_COMMIT[0..6]}-jenkins"
                 // }
@@ -64,7 +65,7 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
-                container('builder') {
+                container('jlnp') {
                     sh 'kubectl get all -n devops'
                 }
             }
