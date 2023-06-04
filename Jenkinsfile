@@ -1,4 +1,5 @@
-CURR_STAGE="Start"
+CURR_STAGE = "Start"
+GIT_COMMIT = ""
 pipeline {
     agent {
         kubernetes {
@@ -28,9 +29,11 @@ pipeline {
         stage('Git checkout') {
             steps {
                 script {
-                    CURR_STAGE="Git checkout"
+                    CURR_STAGE = "Git checkout"
+                    GIT_COMMIT = sh 'git logs -n 1 --pretty=format"%h"'
                 }
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
+                echo ${GIT_COMMIT}
             }
         }
         // Build the docker image using a multistage Dockerfile
@@ -42,7 +45,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USR', passwordVariable: 'PWD')]) {
                     container('builder') {
                         sh "echo ${PWD} | docker login -u ${USR} --password-stdin"
-                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.${BUILD_NUMBER}-jenkins ${WORKSPACE}/elta-pipeline"
+                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_MAJOR}.${IMAGE_MINOR}.0-jenkins ${WORKSPACE}"
                     }
                 }
             }
