@@ -2,6 +2,7 @@
 ## Prerequisites
 • Git  
 • Docker  
+• Dotnet SDK
 • Minikube  
 • Github repository set up
 • Dockerhub repository set up
@@ -77,20 +78,23 @@ helm install jenkins jenkins/
 ```
 
 ## Jenkins configuration  
-#### Install the following plugins:  
+#### Make sure the following plugins are installed:  
+• Pipeline
+• Git
+• Workspace cleanup
 • Kubernetes  
   
 #### Add Github and Docker-hub credentials  
 Add Github's username and access-key  
 Add Dockerhub's username and access-key  
 
-#### Create a pipeline  
+#### Create a pipeline (Jenkinsfile)  
 Using Jenkins' pipeline tool  
 The pipeline perform the following stages:  
 Git checkout - pull source files from the Github repo.  
-Build - builds the application using a multistage Dockerfile
+Build - builds the application using a multistage Dockerfile  
 
-In order for jenkins to perform tasks on agent-pods, I created 2 agent pod yaml files
-`build-agent.yaml`
-`deploy-agent.yaml`
-Which will be used respectively
+In order for jenkins to perform tasks on agent-pods, I created 2 agent-pod yaml files:  
+`build-agent.yaml` which uses a docker dind image  
+`deploy-agent.yaml` which uses a kubectl + helm image  
+

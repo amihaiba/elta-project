@@ -32,5 +32,4 @@ A step by step documentation can be found in the [step-by-step.md](https://githu
 
 ## Further improvements  
 NodePort is sufficient for the scope of this project as it is running on just one node but can scaled up using an NGINX controller and ingress for both namespaces to allow better scalability and reliability.  
-Kubernetes will no longer support docker images in the future, so a differnet tool would need to be used, such as Kaniko.
-Helmify both the jenkins deployment and the web app.
+Kubernetes will no longer support docker images in the future, so a differnet tool would need to be used, such as Kaniko.  
