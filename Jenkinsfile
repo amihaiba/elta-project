@@ -21,11 +21,11 @@ pipeline {
                     CURR_STAGE="Clean"
                 }
                 cleanWs()
-                withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
-                    container('deployer') {
-                        sh 'kubectl get pods'
-                    }
-                }
+                // withKubeConfig([serverUrl: 'https://kubernetes.default.svc']) {
+                //     container('deployer') {
+                //         sh 'kubectl get pods'
+                //     }
+                // }
                 // Clean up old images
                 // sh 'docker images | grep " [days|months|weeks|years]* ago" | awk "{print $3 is $4 $5 old}"'
                 // sh 'docker images'
