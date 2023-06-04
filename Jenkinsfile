@@ -73,7 +73,9 @@ pipeline {
                     CURR_STAGE = "Deployment"
                 }
                 withKubeConfig([serverUrl: "${APISERVER}"]) {
-                    sh 'kubectl get pods'
+                    container('deployer') {
+                        sh 'kubectl get pods'
+                    }
                 }
             }
         }
