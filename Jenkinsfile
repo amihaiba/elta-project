@@ -22,15 +22,15 @@ pipeline {
         //     }
         // }
 
-        // Fetch source files from the github repository
-        // stage('Git checkout') {
-        //     steps {
-        //         script {
-        //             CURR_STAGE="Git checkout"
-        //         }
-        //         git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
-        //     }
-        // }
+        Fetch source files from the github repository
+        stage('Git checkout') {
+            steps {
+                script {
+                    CURR_STAGE="Git checkout"
+                }
+                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/amihaiba/elta-project.git'
+            }
+        }
         // Build the docker image using a multistage Dockerfile
         stage('Build and deliver') {
             steps {
@@ -39,7 +39,8 @@ pipeline {
                 }
                 container('kaniko') {
                     // sh "docker build -t amihaiba/eltamvc:0.1.0-jenkins /home/jenkins/agent/workspace/elta-pipeline/eltaMVC"
-                    sh "/kaniko/executor --context=git://github.com/amihaiba/elta-project --destination=amihaiba/eltamvc:0.1.0-jenkins"
+                    sh "/kaniko/executor --context=dir:///home/jenkins/agent/workspace/elta-pipeline --destination=amihaiba/eltamvc:0.1.0-jenkins"
+                    // sh "/kaniko/executor --context=git://github.com/amihaiba/elta-project --destination=amihaiba/eltamvc:0.1.0-jenkins"
                 }
             }
         }
