@@ -63,6 +63,9 @@ pipeline {
                 script {
                     CURR_STAGE="Deployment"
                 }
+                withKubeConfig() {
+                    sh 'kubectl get pods'
+                }
                 // container('builder') {
                 //     sh 'kubectl get pods'
                 // }
